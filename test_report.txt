@@ -16,7 +16,7 @@ FAIL src/text.test.tsx
           [36m<header[39m
             [33mclass[39m=[32m"App-header"[39m
           [36m>[39m
-            [0mChad Haiges UD CISC275 with React Hooks and TypeScript[0m
+            [0mChad Haiges UD CISC275 hello world with React Hooks and TypeScript.[0m
           [36m</header>[39m
           [36m<p>[39m
             [0mEdit [0m
@@ -53,5 +53,5 @@ All files |     100 |      100 |     100 |     100 |
 Test Suites: 1 failed, 1 passed, 2 total
 Tests:       1 failed, 1 passed, 2 total
 Snapshots:   0 total
-Time:        1.716 s
+Time:        1.777 s
 Ran all test suites.
