@@ -4,7 +4,9 @@
  *      C = (F - 32) * 5/9
  */
 export function fahrenheitToCelius(temperature: number): number {
-    return 0;
+    const cel: number = (temperature - 32) * (5 / 9);
+
+    return cel;
 }
 
 /**
