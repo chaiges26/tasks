@@ -57,7 +57,7 @@ export function convertYesNo(word: string): boolean | null {
     } else if (word.toUpperCase() === "NO") {
         bool = false;
     } else {
-        bool = null;
+        return null;
     }
     return bool;
 }
