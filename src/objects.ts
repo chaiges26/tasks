@@ -10,7 +10,17 @@ export function makeBlankQuestion(
     name: string,
     type: QuestionType
 ): Question {
-    return {};
+    const blankQuestion: Question = {
+        id: id,
+        name: name,
+        type: type,
+        expected: "",
+        body: "",
+        options: [],
+        points: 1,
+        published: false
+    };
+    return blankQuestion;
 }
 
 /**
@@ -21,6 +31,11 @@ export function makeBlankQuestion(
  * HINT: Look up the `trim` and `toLowerCase` functions.
  */
 export function isCorrect(question: Question, answer: string): boolean {
+    if (
+        answer.trim().toLowerCase() === question.expected.trim().toLowerCase()
+    ) {
+        return true;
+    }
     return false;
 }
 
@@ -31,7 +46,10 @@ export function isCorrect(question: Question, answer: string): boolean {
  * be exactly one of the options.
  */
 export function isValid(question: Question, answer: string): boolean {
-    return false;
+    if (question.type === "short_answer_question") {
+        return true;
+    }
+    return question.options.includes(answer) ? true : false;
 }
 
 /**
@@ -41,7 +59,7 @@ export function isValid(question: Question, answer: string): boolean {
  * name "My First Question" would become "9: My First Q".
  */
 export function toShortForm(question: Question): string {
-    return "";
+    return question.id + ": " + question.name.substring(0, 10);
 }
 
 /**
@@ -62,7 +80,15 @@ export function toShortForm(question: Question): string {
  * Check the unit tests for more examples of what this looks like!
  */
 export function toMarkdown(question: Question): string {
-    return "";
+    let fullQ: string = "# " + question.name + "\n" + question.body;
+    if (question.type === "multiple_choice_question") {
+        fullQ += question.options.reduce(
+            (selection: string, answer: string): string =>
+                selection + "\n- " + answer,
+            ""
+        );
+    }
+    return fullQ;
 }
 
 /**
@@ -70,7 +96,7 @@ export function toMarkdown(question: Question): string {
  * `newName`.
  */
 export function renameQuestion(question: Question, newName: string): Question {
-    return question;
+    return { ...question, name: newName };
 }
 
 /**
