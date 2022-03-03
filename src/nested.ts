@@ -1,5 +1,10 @@
 import { Answer } from "./interfaces/answer";
 import { Question, QuestionType } from "./interfaces/question";
+import {
+    duplicateQuestion,
+    makeBlankQuestion,
+    renameQuestion
+} from "./objects";
 
 /**
  * Consumes an array of questions and returns a new array with only the questions
@@ -122,7 +127,16 @@ export function toCSV(questions: Question[]): string {
  * making the `text` an empty string, and using false for both `submitted` and `correct`.
  */
 export function makeAnswers(questions: Question[]): Answer[] {
-    return [];
+    return [
+        ...questions.map(
+            (question: Question): Answer => ({
+                questionId: question.id,
+                text: "",
+                submitted: false,
+                correct: false
+            })
+        )
+    ];
 }
 
 /***
@@ -130,7 +144,11 @@ export function makeAnswers(questions: Question[]): Answer[] {
  * each question is now published, regardless of its previous published status.
  */
 export function publishAll(questions: Question[]): Question[] {
-    return [];
+    return [
+        ...questions.map(
+            (question: Question): Question => ({ ...question, published: true })
+        )
+    ];
 }
 
 /***
@@ -138,7 +156,16 @@ export function publishAll(questions: Question[]): Question[] {
  * are the same type. They can be any type, as long as they are all the SAME type.
  */
 export function sameType(questions: Question[]): boolean {
-    return false;
+    return (
+        questions.filter(
+            (question: Question): boolean =>
+                question.type === "short_answer_question"
+        ).length === questions.length ||
+        questions.filter(
+            (question: Question): boolean =>
+                question.type === "multiple_choice_question"
+        ).length === questions.length
+    );
 }
 
 /***
@@ -152,7 +179,7 @@ export function addNewQuestion(
     name: string,
     type: QuestionType
 ): Question[] {
-    return [];
+    return [...questions, makeBlankQuestion(id, name, type)];
 }
 
 /***
@@ -165,7 +192,14 @@ export function renameQuestionById(
     targetId: number,
     newName: string
 ): Question[] {
-    return [];
+    return [
+        ...questions.map(
+            (question: Question): Question =>
+                question.id === targetId
+                    ? renameQuestion(question, newName)
+                    : question
+        )
+    ];
 }
 
 /***
@@ -180,7 +214,19 @@ export function changeQuestionTypeById(
     targetId: number,
     newQuestionType: QuestionType
 ): Question[] {
-    return [];
+    const Q = [
+        ...questions.map((question: Question): Question => {
+            if (targetId === question.id) {
+                if (newQuestionType != "multiple_choice_question") {
+                    return { ...question, type: newQuestionType, options: [] };
+                } else {
+                    return { ...question, type: newQuestionType };
+                }
+            }
+            return question;
+        })
+    ];
+    return Q;
 }
 
 /**
@@ -199,7 +245,26 @@ export function editOption(
     targetOptionIndex: number,
     newOption: string
 ): Question[] {
-    return [];
+    return [
+        ...questions.map((question: Question): Question => {
+            const editQuestionOption = {
+                ...question,
+                options: [...question.options]
+            };
+            if (question.id === targetId) {
+                if (targetOptionIndex === -1) {
+                    editQuestionOption.options.push(newOption);
+                } else {
+                    editQuestionOption.options.splice(
+                        targetOptionIndex,
+                        1,
+                        newOption
+                    );
+                }
+            }
+            return editQuestionOption;
+        })
+    ];
 }
 
 /***
@@ -213,5 +278,11 @@ export function duplicateQuestionInArray(
     targetId: number,
     newId: number
 ): Question[] {
-    return [];
+    const Id = questions.findIndex(
+        (question: Question): boolean => targetId === question.id
+    );
+
+    const arr = [...questions];
+    arr.splice(Id + 1, 0, duplicateQuestion(newId, questions[Id]));
+    return arr;
 }
