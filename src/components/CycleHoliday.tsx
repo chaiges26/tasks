@@ -12,11 +12,11 @@ export function CycleHoliday(): JSX.Element {
     const [holidayState, setHoliday] = useState<string>("🎃");
 
     const alphabeticalRecord: Record<string, string> = {
-        "🎃": "🦃",
-        "🦃": "🎅",
-        "🎅": "☸️",
-        "☸️": "🐲",
-        "🐲": "🎃"
+        "🎃": "🐲",
+        "🐲": "🦃",
+        "🦃": "☸️",
+        "☸️": "🎅",
+        "🎅": "🎃"
     };
 
     const byDateRecord: Record<string, string> = {
